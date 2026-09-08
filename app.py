@@ -51,7 +51,7 @@ elif tela == "Resumo das Hipóteses":
         else:
             return ""
 
-    styled_df = df_hip.style.applymap(cor_status, subset=["status"])
+    styled_df = df_hip.style.map(cor_status, subset=["status"])
     st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
     st.markdown("---")
