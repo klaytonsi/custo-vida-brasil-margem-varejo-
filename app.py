@@ -13,6 +13,10 @@ def carregar_margem():
 def carregar_hipoteses():
     return pd.read_parquet("data/analytics/resumo_hipoteses.parquet")
 
+@st.cache_data
+def carregar_produtos():
+    return pd.read_parquet("data/analytics/comparativo_produtos.parquet")
+
 st.sidebar.title("📊 Navegação")
 tela = st.sidebar.radio(
     "Escolha a análise:",
@@ -69,4 +73,42 @@ elif tela == "Resumo das Hipóteses":
     col3.metric("Não-testáveis", nao_testaveis)
 
 elif tela == "Comparativo de Produtos":
-    st.info("Em construção — próxima etapa.")
+    df_prod = carregar_produtos()
+
+    st.subheader("Comparativo de Produtos — Variação Máxima Mês a Mês")
+
+    categorias = ["Todas"] + sorted(df_prod["categoria_id"].unique().tolist())
+    categoria_selecionada = st.selectbox("Filtrar por categoria:", categorias)
+
+    if categoria_selecionada != "Todas":
+        df_filtrado = df_prod[df_prod["categoria_id"] == categoria_selecionada]
+    else:
+        df_filtrado = df_prod
+
+    df_ordenado = df_filtrado.sort_values("variacao_maxima_pp", ascending=True)
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=df_ordenado["variacao_maxima_pp"],
+        y=df_ordenado["nome_produto"],
+        orientation="h",
+        marker_color="#4a90d9"
+    ))
+    fig.add_vline(x=1.27, line_dash="dash", line_color="orange",
+                  annotation_text="Benchmark de ruído (1.27pp)")
+
+    fig.update_layout(
+        title="Variação máxima mensal por produto (pp)",
+        xaxis_title="Variação máxima (pp)",
+        yaxis_title="",
+        height=max(400, len(df_ordenado) * 25)
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+    st.dataframe(
+        df_filtrado[["nome_produto", "categoria_id", "variacao_maxima_pp", "preco_base"]]
+        .sort_values("variacao_maxima_pp", ascending=False),
+        use_container_width=True,
+        hide_index=True
+    )
