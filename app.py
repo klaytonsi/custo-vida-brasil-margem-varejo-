@@ -44,20 +44,24 @@ elif tela == "Resumo das Hipóteses":
     st.subheader("Resumo do Processo de Investigação — 9 Hipóteses Testadas")
 
     def cor_status(status):
-        if status == "Refutada":
+        refutada = "Refutada" in status
+        nao_testavel = "Não-testável" in status
+        if refutada and nao_testavel:
+            return "background-color: #4a2f1f; color: white"
+        elif refutada:
             return "background-color: #4a1f1f; color: white"
-        elif status == "Não-testável":
+        elif nao_testavel:
             return "background-color: #4a3d1f; color: white"
         else:
             return ""
 
-    styled_df = df_hip.style.applymap(cor_status, subset=["status"])
+    styled_df = df_hip.style.map(cor_status, subset=["status"])
     st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
     st.markdown("---")
     total = len(df_hip)
-    refutadas = (df_hip["status"] == "Refutada").sum()
-    nao_testaveis = (df_hip["status"] == "Não-testável").sum()
+    refutadas = df_hip["status"].str.contains("Refutada").sum()
+    nao_testaveis = df_hip["status"].str.contains("Não-testável").sum()
 
     col1, col2, col3 = st.columns(3)
     col1.metric("Total de hipóteses", total)
