@@ -25,6 +25,21 @@ tela = st.sidebar.radio(
 
 st.title("Custo de Vida Brasil — Case de Margem no Varejo")
 
+# --- Bloco fixo: Conclusões / Recomendações de Negócio ---
+with st.container():
+    st.markdown("### 💡 Conclusões / Recomendações de Negócio")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("**Achado central**")
+        st.write("A margem nunca caiu de fato. A oscilação real (~0.4pp) fica bem dentro do ruído natural do negócio (~1.27pp) — não há queda estrutural de margem.")
+    with col2:
+        st.markdown("**Causa da percepção**")
+        st.write("O alarme surgiu ao analisar abril isoladamente (mês mais baixo do ano) sem comparar com a variação normal esperada.")
+    with col3:
+        st.markdown("**Recomendação**")
+        st.write("Adotar 1.27pp como benchmark oficial de ruído, evitando alarmes falsos em análises futuras de margem.")
+st.divider()
+
 if tela == "Margem vs. Ruído":
     df = carregar_margem()
 
