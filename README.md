@@ -4,7 +4,7 @@
 
 # 🛒 Custo de Vida Brasil — Case de Margem no Varejo
 
-🔗 **Acesse o app:** [margem.streamlit.app](https://margem.streamlit.app)
+🔗 **Acesse o app:** [margem.streamlit.app](https://custo-vida-brasil-margem.streamlit.app/)
 
 > Case completo de análise de dados que investigou uma queda de margem percebida por uma rede de supermercados — testando 9 hipóteses de causa raiz — e descobriu que a queda nunca existiu: era um artefato visual de escala de gráfico.
 
